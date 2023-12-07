@@ -32,6 +32,7 @@ namespace Miniblog.Core
             public static class Blog
             {
                 public static readonly string Name = "blog:name";
+                public static readonly string GitHubContentsUrl= "blog:markdownUrl";
             }
 
             public static class User
