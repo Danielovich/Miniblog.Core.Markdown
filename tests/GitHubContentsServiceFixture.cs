@@ -1,20 +1,19 @@
-﻿namespace tests
+namespace tests
 {
     using Microsoft.Extensions.Configuration;
-
-    using Moq;
     using Moq.Protected;
+    using Moq;
 
     public class GitHubContentsServiceFixture
     {
-        public Mock<HttpMessageHandler> HttpMessageHandlerMock { get; private set; }
-        public HttpClient HttpClient { get; private set; }
-        public IConfiguration Configuration { get; private set; }
+        public Mock<HttpMessageHandler> HttpMessageHandlerMock { get; private set; } = default!;
+        public HttpClient HttpClient { get; private set; } = default!;
+        public IConfiguration Configuration { get; set; } = default!;
 
         public GitHubContentsServiceFixture()
         {
             HttpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            var gitHubResponse = new GitHubPostsResponse();
+            var gitHubResponse = new GitHubContentsApiResponse();
 
             HttpMessageHandlerMock
                 .Protected()
@@ -22,7 +21,7 @@
                     "SendAsync",
                     ItExpr.IsAny<HttpRequestMessage>(),
                     ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(gitHubResponse.FakeGitHubContentsResponse);
+                .ReturnsAsync(gitHubResponse.FakeGitHubApiContentsResponse);
 
             HttpClient = new HttpClient(HttpMessageHandlerMock.Object);
 
@@ -32,7 +31,7 @@
 
             Configuration = new ConfigurationBuilder()
                 .AddInMemoryCollection(inMemorySettings)
-                .Build();
+                .Build();       
         }
     }
 }
