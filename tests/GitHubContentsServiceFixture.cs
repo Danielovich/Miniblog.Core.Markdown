@@ -1,37 +1,32 @@
-namespace tests
+namespace tests;
+
+public class GitHubContentsServiceFixture
 {
-    using Microsoft.Extensions.Configuration;
-    using Moq.Protected;
-    using Moq;
+    public Mock<HttpMessageHandler> HttpMessageHandlerMock { get; private set; } = default!;
+    public HttpClient HttpClient { get; private set; } = default!;
+    public IConfiguration Configuration { get; set; } = default!;
 
-    public class GitHubContentsServiceFixture
+    public GitHubContentsServiceFixture()
     {
-        public Mock<HttpMessageHandler> HttpMessageHandlerMock { get; private set; } = default!;
-        public HttpClient HttpClient { get; private set; } = default!;
-        public IConfiguration Configuration { get; set; } = default!;
+        HttpMessageHandlerMock = new Mock<HttpMessageHandler>();
+        var gitHubResponse = new GitHubContentsApiResponse();
 
-        public GitHubContentsServiceFixture()
-        {
-            HttpMessageHandlerMock = new Mock<HttpMessageHandler>();
-            var gitHubResponse = new GitHubContentsApiResponse();
+        HttpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>())
+            .ReturnsAsync(gitHubResponse.FakeGitHubApiContentsResponse);
 
-            HttpMessageHandlerMock
-                .Protected()
-                .Setup<Task<HttpResponseMessage>>(
-                    "SendAsync",
-                    ItExpr.IsAny<HttpRequestMessage>(),
-                    ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(gitHubResponse.FakeGitHubApiContentsResponse);
+        HttpClient = new HttpClient(HttpMessageHandlerMock.Object);
 
-            HttpClient = new HttpClient(HttpMessageHandlerMock.Object);
+        var inMemorySettings = new Dictionary<string, string?> {
+            {"blog:markdownUrl", "https://api.github.com/repos/Danielovich/danielovich.github.io/contents/_posts?ref=master"},
+        };
 
-            var inMemorySettings = new Dictionary<string, string?> {
-                {"blog:markdownUrl", "https://api.github.com/repos/Danielovich/danielovich.github.io/contents/_posts?ref=master"},
-            };
-
-            Configuration = new ConfigurationBuilder()
-                .AddInMemoryCollection(inMemorySettings)
-                .Build();       
-        }
+        Configuration = new ConfigurationBuilder()
+            .AddInMemoryCollection(inMemorySettings)
+            .Build();       
     }
 }
