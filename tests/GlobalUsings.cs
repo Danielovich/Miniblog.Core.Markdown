@@ -4,5 +4,7 @@ global using Moq.Protected;
 global using Moq;
 global using System.Threading.Tasks;
 global using Microsoft.Extensions.Configuration;
-
-
+global using System.Net;
+global using System.Text;
+global using AutoFixture;
+global using AutoFixture.Xunit2;
