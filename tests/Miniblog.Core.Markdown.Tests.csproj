@@ -25,7 +25,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\src\Miniblog.Core.csproj" />
+    <ProjectReference Include="..\src\Miniblog.Core.Markdown.csproj" />
   </ItemGroup>
 
   <ItemGroup>
