@@ -9,7 +9,7 @@ namespace Miniblog.Core.Services
     using System.Text.Json;
     using System.Threading.Tasks;
 
-    public class GitHubContentsService
+    public class GitHubContentsService : IGithubContentsService
     {
         private readonly HttpClient httpClient;
         private readonly IConfiguration configuration;
