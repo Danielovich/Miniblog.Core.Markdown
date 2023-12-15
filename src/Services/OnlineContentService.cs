@@ -5,7 +5,12 @@ namespace Miniblog.Core.Services
     using System.Net.Http;
     using System.Threading.Tasks;
 
-    public class OnlineContentService
+    public interface IOnlineContentService
+    {
+        Task<List<string>> DownloadContentAsync(IEnumerable<Uri> uris);
+    }
+
+    public class OnlineContentService : IOnlineContentService
     {
         private readonly HttpClient httpClient;
 
