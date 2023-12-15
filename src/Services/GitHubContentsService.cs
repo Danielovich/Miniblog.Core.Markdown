@@ -24,20 +24,14 @@ namespace Miniblog.Core.Services
             //if not configured, do nothing
             if (string.IsNullOrEmpty(this.configuration[Constants.Config.Blog.GitHubContentsUrl])) { return; }
 
-            // retrieve references for github contents
-            this.Initialize();
-        }
-
-        private void Initialize()
-        {
-            var loadPostReferences = Task.Run(async () => await this.LoadGithubPostsAsync());
-            loadPostReferences.Wait();
+            // github will not allow any requests without a user agent
+            this.httpClient.DefaultRequestHeaders.Add("User-Agent", this.configuration[Constants.Config.Blog.Name]);
         }
 
         // collect markdown blogposts from github.
-        private async Task LoadGithubPostsAsync()
+        public async Task LoadGithubPostsAsync()
         {
-            var response = await httpClient.GetAsync(Constants.Config.Blog.GitHubContentsUrl);
+            var response = await httpClient.GetAsync(this.configuration[Constants.Config.Blog.GitHubContentsUrl]);
             var json = await response.Content.ReadAsStringAsync();
 
             var blogPostReferences = JsonSerializer.Deserialize<List<GitHubContentsApiResponse>>(json)
