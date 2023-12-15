@@ -93,12 +93,17 @@ namespace Miniblog.Core.Services
             string? line;
             while ((line = reader.ReadLine()) != null)
             {
-                if (!(line.StartsWith(validMarkdownComment1) || line.StartsWith(validMarkdownComment2)))
+                if (line.StartsWith(validMarkdownComment1) || line.StartsWith(validMarkdownComment2))
                 {
-                    break;
+                    continue;
                 }
 
-                contenWriter.WriteLine(line);
+                if (!line.StartsWith(validMarkdownComment1) || line.StartsWith(validMarkdownComment2))
+                {
+                    contenWriter.WriteLine(line);
+                }
+
+                
             }
 
             Post.Content = contenWriter.ToString();
