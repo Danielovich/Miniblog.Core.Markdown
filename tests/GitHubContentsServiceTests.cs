@@ -27,7 +27,7 @@ public class GitHubContentsServiceTests : IDisposable
     public void GithubPosts_Are_Available()
     {
         // Arrange
-        var gitHubResponse = new GitHubContentsApiResponse();
+        var gitHubResponse = new FakeGithubApi();
 
         HttpMessageHandlerMock
             .Protected()
@@ -37,8 +37,10 @@ public class GitHubContentsServiceTests : IDisposable
                 ItExpr.IsAny<CancellationToken>())
             .ReturnsAsync(gitHubResponse.FakeGitHubApiContentsResponse);
 
-        // Act
         var sut = new GitHubContentsService(this.HttpClient, this.Configuration);
+
+        // Act
+        var posts = sut.LoadGithubPostsAsync();
 
         // Assert
         Assert.True(sut.GithubPosts.Count > 0);

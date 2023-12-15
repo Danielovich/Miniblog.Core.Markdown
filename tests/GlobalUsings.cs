@@ -8,3 +8,6 @@ global using System.Net;
 global using System.Text;
 global using AutoFixture;
 global using AutoFixture.Xunit2;
+global using AutoFixture.AutoMoq;
+global using Miniblog.Core.Markdown.Services;
+global using Miniblog.Core.Models;

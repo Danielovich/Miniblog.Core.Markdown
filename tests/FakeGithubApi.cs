@@ -1,6 +1,6 @@
 namespace Miniblog.Core.Markdown.Tests;
 
-internal class GitHubContentsApiResponse
+internal class FakeGithubApi
 {
     public HttpResponseMessage FakeGitHubApiContentsResponse()
     {

@@ -1,12 +1,20 @@
-﻿namespace Miniblog.Core.Services
+namespace Miniblog.Core.Services
 {
+    using Microsoft.AspNetCore.Http;
+
     using System;
+    using System.Globalization;
 
     public static class MarkdownPropertyExtensions
     {
         public static DateTime ParseToDate( this MarkdownProperty markdownProperty)
         {
-            if(DateTime.TryParse(markdownProperty.Value, out var date))
+            if (DateTime.TryParseExact(
+                markdownProperty.Value,
+                Constants.DateTimeFormat,
+                CultureInfo.InvariantCulture,
+                DateTimeStyles.None,
+                out var date))
             {
                 return date;
             }

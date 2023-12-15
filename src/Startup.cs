@@ -23,6 +23,7 @@ namespace Miniblog.Core
     using IWmmLogger = WebMarkupMin.Core.Loggers.ILogger;
     using MetaWeblogService = Services.MetaWeblogService;
     using WmmNullLogger = WebMarkupMin.Core.Loggers.NullLogger;
+    using Miniblog.Core.Markdown.Services;
 
     public class Startup
     {
@@ -99,9 +100,18 @@ namespace Miniblog.Core
         {
             services.AddControllersWithViews();
             services.AddRazorPages();
+            services.AddHttpClient<GitHubContentsService>();
+            services.AddHttpClient<OnlineContentService>();
 
+            services.AddHostedService<PostCacheBackgroundService>();
+
+            services.AddSingleton<IPostCache, PostCache>();
+            services.AddSingleton<IMarkdownToBlogpostsService, MarkdownBlogpostsService>();
+            services.AddSingleton<IOnlineContentService, OnlineContentService>();
+            services.AddSingleton<IGithubContentsService, GitHubContentsService>();
             services.AddSingleton<IUserServices, BlogUserServices>();
-            services.AddSingleton<IBlogService, FileBlogService>();
+            services.AddSingleton<IBlogService, Markdown.Services.MarkdownBlogService>();
+
             services.Configure<BlogSettings>(this.Configuration.GetSection("blog"));
             services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMetaWeblog<MetaWeblogService>();

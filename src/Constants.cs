@@ -1,9 +1,11 @@
 namespace Miniblog.Core
 {
+    using System.Data;
     using System.Diagnostics.CodeAnalysis;
 
     public static class Constants
     {
+        public static readonly string DateTimeFormat = "dd/MM/yyyy HH:mm";
         public static readonly string AllCats = "AllCats";
         public static readonly string AllTags = "AllTags";
         public static readonly string categories = "categories";
@@ -32,7 +34,7 @@ namespace Miniblog.Core
             public static class Blog
             {
                 public static readonly string Name = "blog:name";
-                public static readonly string GitHubContentsUrl= "blog:markdownUrl";
+                public static readonly string GitHubContentsUrl = "blog:markdownUrl";
             }
 
             public static class User
