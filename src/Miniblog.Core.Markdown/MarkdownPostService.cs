@@ -2,20 +2,20 @@ namespace Miniblog.Core.Markdown;
 
 public interface IParseMarkdownToPost
 {
-    Task<List<MarkdownPost>> ParseMarkdownToPost();
+    Task<List<MarkdownPost>> GetMarkdownPosts();
 }
 
-public class ParseMarkdownToPostService : IParseMarkdownToPost
+public class MarkdownPostService : IParseMarkdownToPost
 {
-    private readonly IGithubContentsService githubContentsService;
+    private readonly IGithubContentsApi githubContentsService;
     private readonly IDownloadMarkdown markdownDownloadService;
-    public ParseMarkdownToPostService(IGithubContentsService githubContentsService, IDownloadMarkdown markdownDownloadService)
+    public MarkdownPostService(IGithubContentsApi githubContentsService, IDownloadMarkdown markdownDownloadService)
     {
         this.markdownDownloadService = markdownDownloadService;
         this.githubContentsService = githubContentsService;
     }
 
-    public async Task<List<MarkdownPost>> ParseMarkdownToPost()
+    public async Task<List<MarkdownPost>> GetMarkdownPosts()
     {
         await githubContentsService.LoadContents();
 

@@ -1,6 +1,9 @@
 namespace Miniblog.Core.Markdown.Services
 {
     using Miniblog.Core.Models;
+
+    using NUglify.Helpers;
+
     using System.Collections.Generic;
     using System.Linq;
 
@@ -24,10 +27,12 @@ namespace Miniblog.Core.Markdown.Services
             post.Content = markdownPost.Content;
             post.PubDate = markdownPost.PubDate;
             post.IsPublished = markdownPost.IsPublished;
-            post.Categories.ToList().AddRange(markdownPost.Categories);
             post.Slug = markdownPost.Slug;
             post.Excerpt = markdownPost.Excerpt;
-            post.Tags.ToList().AddRange(markdownPost.Tags);
+            post.Title = markdownPost.Title;
+            markdownPost.Tags.ForEach(post.Tags.Add);
+            markdownPost.Categories.ForEach(post.Categories.Add);
+
 
             return post;
         }

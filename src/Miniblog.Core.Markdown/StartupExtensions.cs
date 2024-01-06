@@ -7,9 +7,9 @@ public static class StartupExtensions
 
         services.AddHttpClient<GitHubApiService>();
         services.AddHttpClient<DownloadMarkdownService>();
-        services.AddSingleton<IParseMarkdownToPost, ParseMarkdownToPostService>();
+        services.AddSingleton<IParseMarkdownToPost, MarkdownPostService>();
         services.AddSingleton<IDownloadMarkdown, DownloadMarkdownService>();
-        services.AddSingleton<IGithubContentsService, GitHubApiService>();
+        services.AddSingleton<IGithubContentsApi, GitHubApiService>();
 
         return services;
     }

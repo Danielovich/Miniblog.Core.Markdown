@@ -1,13 +1,13 @@
 namespace Miniblog.Core.Markdown.Tests;
 
-public partial class MarkdownBlogpostsServiceTests
+public class MarkdownBlogpostsServiceTests
 {
     [Theory, AutoMoqData]
     public async Task Parse_Markdown_To_Blogpost_ReturnsPosts(
-        [Frozen] Mock<IGithubContentsService> githubContentsService,
+        [Frozen] Mock<IGithubContentsApi> githubContentsService,
         [Frozen] Mock<IDownloadMarkdown> onlineContentService,
         IReadOnlyList<GitHubContentsApiResponse> githubResponse,
-        ParseMarkdownToPostService service)
+        MarkdownPostService service)
     {
         // Arrange
         githubContentsService.Setup(s => s.LoadContents()).Returns(Task.CompletedTask);
@@ -16,7 +16,7 @@ public partial class MarkdownBlogpostsServiceTests
             .ReturnsAsync(MarkdownStrings.MarkdownStringCollection());
 
         // Act
-        var result = await service.ParseMarkdownToPost();
+        var result = await service.GetMarkdownPosts();
 
         // Assert
         Assert.NotNull(result);

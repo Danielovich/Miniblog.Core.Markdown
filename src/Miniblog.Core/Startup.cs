@@ -11,7 +11,9 @@ namespace Miniblog.Core
     using Microsoft.Extensions.Hosting;
 
     using Miniblog.Core.Services;
-    using Miniblog.Core.Markdown;
+
+    using Miniblog.Core.Markdown.Markdown;
+    using Miniblog.Core.Markdown.Services;
 
     using WebEssentials.AspNetCore.OutputCaching;
 
@@ -19,13 +21,15 @@ namespace Miniblog.Core
     using WebMarkupMin.Core;
 
     using WilderMinds.MetaWeblog;
+
     using JavaScriptEngineSwitcher.Extensions.MsDependencyInjection;
     using JavaScriptEngineSwitcher.V8;
+
     using IWmmLogger = WebMarkupMin.Core.Loggers.ILogger;
+
     using MetaWeblogService = Services.MetaWeblogService;
+
     using WmmNullLogger = WebMarkupMin.Core.Loggers.NullLogger;
-    using Miniblog.Core.Markdown.Markdown;
-    using Miniblog.Core.Markdown.Services;
 
     public class Startup
     {
