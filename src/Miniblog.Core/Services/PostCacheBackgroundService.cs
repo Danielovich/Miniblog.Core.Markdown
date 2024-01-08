@@ -22,7 +22,7 @@ namespace Miniblog.Core.Markdown.Services
             using var timer = new PeriodicTimer(TimeSpan.FromMinutes(30));
             while (!stoppingToken.IsCancellationRequested)
             {
-                var posts = await markdownBlogpostsService.GetMarkdownPosts();
+                var posts = await markdownBlogpostsService.ParseMarkdownToPost();
 
                 postCache.Posts.Clear();
                 posts.ForEach(markdownPost => postCache.Posts.Add(markdownPost.ConvertToPost()));

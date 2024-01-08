@@ -1,28 +1,21 @@
 namespace Miniblog.Core.Markdown.Tests;
 
-public class MarkdownBlogpostsServiceTests
+public partial class MarkdownBlogpostsServiceTests
 {
     [Theory, AutoMoqData]
     public async Task Parse_Markdown_To_Blogpost_ReturnsPosts(
-        [Frozen] Mock<IGithubContentsApi> githubContentsService,
-        [Frozen] Mock<IDownloadMarkdown> onlineContentService,
-        IReadOnlyList<GitHubContentsApiResponse> githubResponse,
-        MarkdownPostService service)
+        [Frozen] IGithubContentsService githubContentsService,
+        [Frozen] IDownloadMarkdown onlineContentService)
     {
         // Arrange
-        githubContentsService.Setup(s => s.LoadContents()).Returns(Task.CompletedTask);
-        githubContentsService.Setup(s => s.GithubContents).Returns(githubResponse);
-        onlineContentService.Setup(s => s.DownloadMarkdownAsync(It.IsAny<IEnumerable<Uri>>()))
-            .ReturnsAsync(MarkdownStrings.MarkdownStringCollection());
+        var sut = new ParseMarkdownToPostService(githubContentsService, onlineContentService);
 
         // Act
-        var result = await service.GetMarkdownPosts();
+        var result = await sut.ParseMarkdownToPost(MarkdownStrings.MarkdownStringCollection());
 
         // Assert
         Assert.NotNull(result);
         Assert.IsType<List<MarkdownPost>>(result);
-        githubContentsService.Verify(s => s.LoadContents(), Times.Once);
-        onlineContentService.Verify(s => s.DownloadMarkdownAsync(It.IsAny<IEnumerable<Uri>>()), Times.AtLeastOnce);
     }
 }
 

@@ -1,10 +1,10 @@
 [//]: # "title: hugga bugga ulla johnson"
-[//]: # "slug"
-[//]: # "pubDate"
-[//]: # "lastModified"
-[//]: # "excerpt"
-[//]: # "categories"
-[//]: # "isPublished"
+[//]: # "slug: hugga-bugga-ulla-johnson"
+[//]: # "pubDate: 14/12/2023 12:01"
+[//]: # "lastModified: 14/12/2023 13:07"
+[//]: # "excerpt: This is really interesting stuff!!!"
+[//]: # "categories: code, acr, azure, easypeasy, iaas"
+[//]: # "isPublished: true"
 
 I use the command line tools Azure CLI, inside PowerShell.
 

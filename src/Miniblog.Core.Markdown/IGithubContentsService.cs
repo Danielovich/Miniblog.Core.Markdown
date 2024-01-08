@@ -1,6 +1,6 @@
 namespace Miniblog.Core.Markdown;
 
-public interface IGithubContentsApi
+public interface IGithubContentsService
 {
     IReadOnlyList<GitHubContentsApiResponse> GithubContents { get; }
 

@@ -1,30 +1,37 @@
 namespace Miniblog.Core.Markdown;
 
+using Microsoft.VisualBasic;
+
 public interface IParseMarkdownToPost
 {
-    Task<List<MarkdownPost>> GetMarkdownPosts();
+    Task<List<MarkdownPost>> ParseMarkdownToPost();
 }
 
-public class MarkdownPostService : IParseMarkdownToPost
+public class ParseMarkdownToPostService : IParseMarkdownToPost
 {
-    private readonly IGithubContentsApi githubContentsService;
+    private readonly IGithubContentsService githubContentsService;
     private readonly IDownloadMarkdown markdownDownloadService;
-    public MarkdownPostService(IGithubContentsApi githubContentsService, IDownloadMarkdown markdownDownloadService)
+    public ParseMarkdownToPostService(IGithubContentsService githubContentsService, IDownloadMarkdown markdownDownloadService)
     {
         this.markdownDownloadService = markdownDownloadService;
         this.githubContentsService = githubContentsService;
     }
 
-    public async Task<List<MarkdownPost>> GetMarkdownPosts()
+    public async Task<List<MarkdownPost>> ParseMarkdownToPost()
     {
         await githubContentsService.LoadContents();
 
         var contents = await markdownDownloadService.DownloadMarkdownAsync(
             githubContentsService.GithubContents.Select(d => new Uri(d.DownloadUrl)));
 
+        return await ParseMarkdownToPost(contents);
+    }
+
+    public async Task<List<MarkdownPost>> ParseMarkdownToPost(List<string> markdownFiles)
+    {
         var intermediatePosts = new List<MarkdownPost>();
 
-        foreach (var item in contents)
+        foreach (var item in markdownFiles)
         {
             var parser = new MarkdownBlogpostParser(item);
 

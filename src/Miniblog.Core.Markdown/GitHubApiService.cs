@@ -1,6 +1,6 @@
 namespace Miniblog.Core.Markdown;
 
-public class GitHubApiService : IGithubContentsApi
+public class GitHubApiService : IGithubContentsService
 {
     private readonly HttpClient httpClient;
     private readonly IConfiguration configuration;
