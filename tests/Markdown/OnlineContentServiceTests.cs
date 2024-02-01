@@ -1,5 +1,7 @@
 namespace Miniblog.Core.Tests.Markdown;
 
+using Miniblog.Core.Markdown.Markdown;
+
 public class OnlineContentServiceTests : IDisposable
 {
     public void Dispose()
@@ -41,9 +43,13 @@ public class OnlineContentServiceTests : IDisposable
 
     [Theory]
     [AutoData]
-    public async Task Reads_Error_On_UnSuccessful_Status_Code(List<Uri> listOfUris)
+    public async Task On_UnSuccessful_Status_Code_Errors_Are_Present(List<Uri> listOfUris)
     {
         // Arrange
+
+        //otherwise we do not enter actual method we want to test because it filters out non markdown files
+        listOfUris.Add(new Uri("https://some.dk/domain/file.md")); 
+
         await SetupResponse(() => HttpResponseMessageWithStringContent(HttpStatusCode.Gone));
 
         var sut = new DownloadMarkdownService(this.HttpClient);
@@ -52,11 +58,11 @@ public class OnlineContentServiceTests : IDisposable
         var result = await sut.DownloadMarkdownAsync(listOfUris);
 
         // Assert
-        Assert.StartsWith("Error: ", result[0], StringComparison.InvariantCultureIgnoreCase);
+        Assert.True(sut.DownloadExceptions.Any());
     }
 
     [Theory]
-    [AutoData]
+    [MarkdownUriAutoData]
     public async Task Posts_Are_Downloaded(List<Uri> listOfUris)
     {
         // Arrange
@@ -76,6 +82,6 @@ public class OnlineContentServiceTests : IDisposable
                 ItExpr.IsAny<CancellationToken>());
 
         Assert.True(contents.Count == 3);
-        Assert.True(contents.All(a => a.Equals("string content")));
+        Assert.True(contents.All(a => a.Contents.Equals("string content")));
     }
 }

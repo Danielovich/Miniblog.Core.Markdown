@@ -1,54 +1,50 @@
-﻿namespace Miniblog.Core.Markdown
+namespace Miniblog.Core.Markdown;
+
+public static class MarkdownCommentExtensions
 {
-    using System.Collections.Generic;
-    using System.Text.RegularExpressions;
-
-    public static class MarkdownCommentExtensions
+    public static string GetValueBetweenFirstQuoteAndColon(this MarkdownComment comment)
     {
-        public static string GetValueBetweenFirstQuoteAndColon(this MarkdownComment comment)
+        // Regex pattern to find the value between the first quote and the first colon
+        string pattern = "\"(.*?):";
+
+        Match match = Regex.Match(comment.Comment, pattern);
+        if (match.Success)
         {
-            // Regex pattern to find the value between the first quote and the first colon
-            string pattern = "\"(.*?):";
-
-            Match match = Regex.Match(comment.Comment, pattern);
-            if (match.Success)
-            {
-                return match.Groups[1].Value.Trim();
-            }
-
-            return string.Empty;
+            return match.Groups[1].Value.Trim();
         }
 
+        return string.Empty;
+    }
 
-        public static MarkdownProperty AsPostProperty(this MarkdownComment commentAsProperty, string commentProperty)
+
+    public static MarkdownProperty AsPostProperty(this MarkdownComment commentAsProperty, string commentProperty)
+    {
+        // it exercises on a comment like this [//]: # "title: hugga bugga ulla johnson"
+        var pattern = $"{commentProperty}:\\s*(.*?)\"";
+
+        Match match = Regex.Match(commentAsProperty.Comment, pattern);
+        if (match.Success)
         {
-            // it exercises on a comment like this [//]: # "title: hugga bugga ulla johnson"
-            var pattern = $"{commentProperty}:\\s*(.*?)\"";
-
-            Match match = Regex.Match(commentAsProperty.Comment, pattern);
-            if (match.Success)
-            {
-                return new MarkdownProperty { Value = match.Groups[1].Value };
-            }
-
-            return new MarkdownProperty();
+            return new MarkdownProperty { Value = match.Groups[1].Value };
         }
 
-        public static IEnumerable<MarkdownProperty> ToProperty(this MarkdownComment commentAsProperty, string commentProperty, char delimeter)
+        return new MarkdownProperty();
+    }
+
+    public static IEnumerable<MarkdownProperty> ToProperty(this MarkdownComment commentAsProperty, string commentProperty, char delimeter)
+    {
+        // it exercises on a comment that reflects a list of values,
+        // e.g [//]: # "categories: ugga, bugga, johnny"
+        var pattern = $"{commentProperty}:\\s*(.*?)\"";
+
+        Match match = Regex.Match(commentAsProperty.Comment, pattern);
+        if (match.Success)
         {
-            // it exercises on a comment that reflects a list of values,
-            // e.g [//]: # "categories: ugga, bugga, johnny"
-            var pattern = $"{commentProperty}:\\s*(.*?)\"";
+            var listOfValues = match.Groups[1].Value.Split(delimeter);
 
-            Match match = Regex.Match(commentAsProperty.Comment, pattern);
-            if (match.Success)
+            foreach ( var value in listOfValues )
             {
-                var listOfValues = match.Groups[1].Value.Split(delimeter);
-
-                foreach ( var value in listOfValues )
-                {
-                    yield return new MarkdownProperty { Value = value };
-                }
+                yield return new MarkdownProperty { Value = value };
             }
         }
     }

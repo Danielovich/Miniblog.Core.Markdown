@@ -1,51 +1,56 @@
 namespace Miniblog.Core.Markdown;
-
 public interface IDownloadMarkdown
 {
-    Task<List<string>> DownloadMarkdownAsync(IEnumerable<Uri> uris);
+    Task<List<MardownFile>> DownloadMarkdownAsync(IEnumerable<Uri> uris);
 }
 
 public class DownloadMarkdownService : IDownloadMarkdown
 {
     private readonly HttpClient httpClient;
 
+    public List<DownloadMarkdownExecption> DownloadExceptions { get; set; } = new();
+
     public DownloadMarkdownService(HttpClient httpClient)
     {
         this.httpClient = httpClient;
     }
 
-    public async Task<List<string>> DownloadMarkdownAsync(IEnumerable<Uri> uris)
+    public async Task<List<MardownFile>> DownloadMarkdownAsync(IEnumerable<Uri> uris)
     {
-        var internalList = new List<string>();
+        var markdownDowloads = new List<MardownFile>();
 
-        foreach (var uri in uris)
+        foreach (var uri in uris.ByValidFileExtensions(MarkdownFileProperties.ValidFileExtensions))
         {
             try
             {
-                internalList.Add(
+                markdownDowloads.Add(
                     await DownloadMarkdownAsync(uri)
                 );
             }
             catch (HttpRequestException hre)
             {
-                internalList.Add($"Error: {hre}");
+                DownloadExceptions.Add(new DownloadMarkdownExecption($"{hre.Message}", hre));
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                internalList.Add($"Error: {e}");
+                DownloadExceptions.Add(new DownloadMarkdownExecption($"{e.Message}", e));
             }
         }
 
-        return internalList;
+        return markdownDowloads;
     }
 
-    private async Task<string> DownloadMarkdownAsync(Uri uri) {
+    private async Task<MardownFile> DownloadMarkdownAsync(Uri uri)
+    {
         var result = await httpClient.GetAsync(uri);
         if (!result.IsSuccessStatusCode)
         {
             throw new HttpRequestException($"Could not download file at {uri}", null, result.StatusCode);
         }
 
-        return await result.Content.ReadAsStringAsync();
+        MardownFile markdownFile = new();
+        markdownFile.Contents = await result.Content.ReadAsStringAsync();
+
+        return markdownFile;
     }
 }

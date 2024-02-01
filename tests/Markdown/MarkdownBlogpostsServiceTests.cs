@@ -1,5 +1,7 @@
 namespace Miniblog.Core.Markdown.Tests;
 
+using Miniblog.Core.Markdown;
+
 public partial class MarkdownBlogpostsServiceTests
 {
     [Theory, AutoMoqData]
@@ -11,7 +13,7 @@ public partial class MarkdownBlogpostsServiceTests
         var sut = new ParseMarkdownToPostService(githubContentsService, onlineContentService);
 
         // Act
-        var result = await sut.ParseMarkdownToPost(MarkdownStrings.MarkdownStringCollection());
+        var result = await sut.ParseMarkdownToPost(MarkdownStrings.MarkdownFileCollection());
 
         // Assert
         Assert.NotNull(result);

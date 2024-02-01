@@ -27,13 +27,13 @@ public class ParseMarkdownToPostService : IParseMarkdownToPost
         return await ParseMarkdownToPost(contents);
     }
 
-    public async Task<List<MarkdownPost>> ParseMarkdownToPost(List<string> markdownFiles)
+    public async Task<List<MarkdownPost>> ParseMarkdownToPost(List<MardownFile> markdownFiles)
     {
         var intermediatePosts = new List<MarkdownPost>();
 
         foreach (var item in markdownFiles)
         {
-            var parser = new MarkdownBlogpostParser(item);
+            var parser = new MarkdownBlogpostParser(item.Contents);
 
             await parser.ParseCommentsAsPropertiesAsync();
             await parser.ParseContent();

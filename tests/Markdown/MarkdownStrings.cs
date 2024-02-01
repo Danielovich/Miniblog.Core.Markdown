@@ -1,16 +1,19 @@
-﻿namespace Miniblog.Core.Markdown.Tests;
+namespace Miniblog.Core.Markdown.Tests;
+
+using Miniblog.Core.Markdown;
+
 public partial class MarkdownBlogpostsServiceTests
 {
     public static class MarkdownStrings
     {
-        public static List<string> MarkdownStringCollection()
+        public static List<MardownFile> MarkdownFileCollection()
         {
             var markdownFile = Path.Combine(Environment.CurrentDirectory, "assets", "post.md");
 
-            List<string> markdownStrings = new List<string>();
-            markdownStrings.Add(File.ReadAllText(markdownFile));
+            List<MardownFile> markdownFiles = new();
+            markdownFiles.Add(new MardownFile() { Contents = File.ReadAllText(markdownFile) });
 
-            return markdownStrings;
+            return markdownFiles;
         }
     }
 }
